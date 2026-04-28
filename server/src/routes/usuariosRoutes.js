@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/usuarios", UsuariosController.listarUsuarios);
 router.post("/usuarios", UsuariosController.cadastrarUsuario);
-router.put("/usuarios/:id", UsuariosController.atualizarUsuario)
+router.delete("/usuarios", UsuariosController.cadastrarUsuario);
+router.put("/usuarios/:id", UsuariosController.atualizarUsuario);
 
 export default router;
