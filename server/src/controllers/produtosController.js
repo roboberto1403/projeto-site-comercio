@@ -15,7 +15,7 @@ class ProdutosController {
 
   static async listarProdutos(req, res, next) {
       try {
-        const listaProdutos = await produto.find();
+        const listaProdutos = produto.find();
         
         req.resultado = listaProdutos;
 
@@ -95,7 +95,7 @@ class ProdutosController {
 }
 
 async function processaBusca(parametros) {
-          const { categoria, nome, minPreco, maxPreco } = parametros;
+        const { categoria, nome, minPreco, maxPreco } = parametros;
 
         let busca = {};
         const preco = {};
