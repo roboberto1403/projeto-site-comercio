@@ -27,7 +27,7 @@ class UsuariosController {
       try {
         const id = req.params.id
         const usuarioModificado = await usuario.findByIdAndUpdate(id, {$set: req.body}, {returnDocument: 'after'})
-        if (usuarioModificado ==! null) {
+        if (usuarioModificado !== null) {
           res.status(200).json({message: "Usuário modificado com sucesso!", usurio: usuarioModificado})
         } else {
           next(new NaoEncontrado("Usuário não encontrado"));
@@ -42,7 +42,7 @@ class UsuariosController {
     try {
       const id = req.params.id
       const usuarioDeletado = await usuario.findByIdAndDelete(id)
-      if (usuarioDeletado ==! null) {
+      if (usuarioDeletado !== null) {
           res.status(200).json({message: "Usuário deletado com sucesso!"})
         } else {
           next(new NaoEncontrado("Usuário não encontrado"));
@@ -52,13 +52,33 @@ class UsuariosController {
     }
   }
 
+  static async listarProdutosCarrinho(req, res, next) {
+    try {
+      const id = req.params.id;
+      const usuarioEncontrado = await usuario.findById(id)
+      const carrinho = usuarioEncontrado.carrinho
+      var totalCarrinho = 0
+
+      if (usuarioEncontrado !== null) {
+        carrinho.map(produto => (
+          totalCarrinho += produto.preco
+        ))
+        res.status(200).json({carrinho: carrinho, total: totalCarrinho})
+      } else {
+        next(new NaoEncontrado("Usuário não encontrado"));
+      }
+    } catch (erro) {
+      next(erro);
+    }
+  }
+
   static async adicionarProdutoCarrinho(req, res, next) {
     try {
       const id = req.params.id
-      const produto = req.params.produto
-      const usuarioCarrinhoAtualizado = await findByIdAndUpdate(id, { $addToSet: { carrinho: produto } }, { returnDocument: 'after' })
+      const produtoId = req.params.produto
+      const usuarioCarrinhoAtualizado = await usuario.findByIdAndUpdate(id, { $addToSet: { carrinho: produtoId } }, { returnDocument: 'after' })
       
-      if (usuarioCarrinhoAtualizado ==! null) {
+      if (usuarioCarrinhoAtualizado !== null) {
         res.status(200).json({message: "Produto adicionado com sucesso!", carrinho: usuarioCarrinhoAtualizado.carrinho})
       } else {
         next(new NaoEncontrado("Usuário não encontrado"));
@@ -71,10 +91,10 @@ class UsuariosController {
   static async removerProdutoCarrinho(req, res, next) {
     try {
       const id = req.params.id
-      const produto = req.params.produto
-      const usuarioCarrinhoAtualizado = await findByIdAndUpdate(id, { $pull: { carrinho: produto } }, { returnDocument: 'after' })
+      const produtoId = req.params.produto
+      const usuarioCarrinhoAtualizado = await usuario.findByIdAndUpdate(id, { $pull: { carrinho: produtoId } }, { returnDocument: 'after' })
       
-      if (usuarioCarrinhoAtualizado ==! null) {
+      if (usuarioCarrinhoAtualizado !== null) {
         res.status(200).json({message: "Produto removido com sucesso!", carrinho: usuarioCarrinhoAtualizado.carrinho})
       } else {
         next(new NaoEncontrado("Usuário não encontrado"));

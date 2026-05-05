@@ -31,7 +31,7 @@ class ProdutosController {
       const id = req.params.id
       const produtoRequerido = await produto.findById(id)
 
-      if(produtoRequerido ==! null) {
+      if(produtoRequerido !== null) {
         res.status(200).json(produtoRequerido);
       } else {
         next(new NaoEncontrado("Produto não encontrado"));
@@ -46,7 +46,7 @@ class ProdutosController {
       try {
         const id = req.params.id
         const produtoModificado = await produto.findByIdAndUpdate(id, {$set: req.body}, {returnDocument: 'after'})
-        if (produtoModificado ==! null) {
+        if (produtoModificado !== null) {
           res.status(200).json({message: "Produto modificado com sucesso!", produto: produtoModificado})
         } else {
           next(new NaoEncontrado("Produto não encontrado"));
@@ -62,7 +62,7 @@ class ProdutosController {
     try {
       const id = req.params.id
       const produtoDeletado = await produto.findByIdAndDelete(id)
-      if (produtoDeletado ==! null) {
+      if (produtoDeletado !== null) {
           res.status(200).json({message: "Produto deletado com sucesso!"})
         } else {
           next(new NaoEncontrado("Produto não encontrado"));
