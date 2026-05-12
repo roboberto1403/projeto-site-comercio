@@ -8,11 +8,11 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
 `
 
-function Header() {
+function Header({ aberto, setAberto }) {
   return (
     <HeaderContainer>
         <Logo/>
-        <IconesHeader/>
+        <IconesHeader aberto={aberto} setAberto={setAberto} />
     </HeaderContainer>
   )
 }

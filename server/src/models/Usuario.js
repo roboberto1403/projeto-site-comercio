@@ -6,13 +6,25 @@ const usuarioSchema = new mongoose.Schema({
   email: { type: String, required: [true, "O email do usuário é obrigatório."], unique: true },
   senha: { type: String, required: [true, "A senha do usuário é obrigatória."] },
   telefone: { type: String },
-  carrinho: [
-    { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'produtos',
-    autopopulate: {select: "nome preco"}
+  carrinho: {
+    itens: [
+      {
+        produto: { 
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: 'produtos',
+          autopopulate: { select: "nome preco estoque" } 
+        },
+        quantidade: { 
+          type: Number,
+          default: 1 
+        }
+      }
+    ],
+    total: { 
+      type: Number,
+      default: 0 
+    }
   }
-]
 }, { versionKey: false });
 
 usuarioSchema.plugin(autopopulate);

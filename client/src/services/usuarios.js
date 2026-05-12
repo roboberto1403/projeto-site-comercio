@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const produtosAPI = axios.create({baseURL: "http://localhost:8080/usuarios/69e92fe0535986da6254cdc8"});
+const produtosAPI = axios.create({baseURL: "http://localhost:8080/usuarios/6a01d76d07dfe8418a3547df"});
 
 async function getProdutosCarrinho() {
   const response = await produtosAPI.get("/")

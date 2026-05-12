@@ -1,4 +1,4 @@
-import { usuario } from "../models/index.js";
+import { usuario, produto } from "../models/index.js";
 import NaoEncontrado from "../erros/NaoEncontrado.js";
 
 class UsuariosController { 
@@ -55,15 +55,13 @@ class UsuariosController {
   static async listarProdutosCarrinho(req, res, next) {
     try {
       const id = req.params.id;
-      const usuarioEncontrado = await usuario.findById(id)
+      const usuarioEncontrado = await usuario
+        .findById(id)
+        .populate("carrinho.itens.produto")
       const carrinho = usuarioEncontrado.carrinho
-      var totalCarrinho = 0
 
       if (usuarioEncontrado !== null) {
-        carrinho.map(produto => (
-          totalCarrinho += produto.preco
-        ))
-        res.status(200).json({carrinho: carrinho, total: totalCarrinho})
+        res.status(200).json({carrinho: carrinho})
       } else {
         next(new NaoEncontrado("Usuário não encontrado"));
       }
@@ -76,10 +74,73 @@ class UsuariosController {
     try {
       const id = req.params.id
       const produtoId = req.params.produto
-      const usuarioCarrinhoAtualizado = await usuario.findByIdAndUpdate(id, { $addToSet: { carrinho: produtoId } }, { returnDocument: 'after' })
+      const produtoEncontrado = await produto.findById(produtoId)
+      const usuarioEncontrado = await usuario.findById(id)
       
-      if (usuarioCarrinhoAtualizado !== null) {
-        res.status(200).json({message: "Produto adicionado com sucesso!", carrinho: usuarioCarrinhoAtualizado.carrinho})
+      if (usuarioEncontrado !== null) {
+        const item = usuarioEncontrado.carrinho.itens.find(item => 
+          item.produto._id == produtoId
+        )
+        if (item == null) {
+          await usuarioEncontrado.updateOne(
+            { $addToSet: { "carrinho.itens": {produto: produtoId} } }
+          )
+        } else {
+          await usuario.updateOne(
+            { _id: id, "carrinho.itens.produto": produtoId },
+            { $inc: { "carrinho.itens.$.quantidade": 1 } }
+          )        }
+        await usuarioEncontrado.updateOne(
+          { $inc: { "carrinho.total": produtoEncontrado.preco } }
+        )
+        
+        const usuarioAtualizado = await usuario.findById(id).populate("carrinho.itens.produto")
+
+        res.status(200).json({
+          message: "Produto adicionado com sucesso!",
+          carrinho: usuarioAtualizado.carrinho
+        })
+      } else {
+        next(new NaoEncontrado("Usuário não encontrado"));
+      }
+    } catch (erro) {
+      next(erro);
+    }
+  }
+
+    static async removerUnidadeProdutoCarrinho(req, res, next) {
+    try {
+      const id = req.params.id
+      const produtoId = req.params.produto
+      const produtoEncontrado = await produto.findById(produtoId)
+      const usuarioEncontrado = await usuario.findById(id)
+      
+      if (usuarioEncontrado !== null) {
+        const item = usuarioEncontrado.carrinho.itens.find(item => 
+          item.produto._id == produtoId
+        )
+        if (item.quantidade == 1) {
+          await usuario.updateOne(
+          { _id: id}, 
+          { $pull: { "carrinho.itens": { produto: produtoId } } }
+        )
+        } else {
+          await usuario.updateOne(
+          { _id: id, "carrinho.itens.produto": produtoId },
+          { $inc: { "carrinho.itens.$.quantidade": -1 } }
+        ) 
+        }
+               
+        await usuarioEncontrado.updateOne(
+          { $inc: { "carrinho.total": -produtoEncontrado.preco } }
+        )
+        
+        const usuarioAtualizado = await usuario.findById(id).populate("carrinho.itens.produto")
+
+        res.status(200).json({
+          message: "Produto removido com sucesso!",
+          carrinho: usuarioAtualizado.carrinho
+        })
       } else {
         next(new NaoEncontrado("Usuário não encontrado"));
       }

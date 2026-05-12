@@ -1,5 +1,8 @@
 import styled from 'styled-components'
 import Vitrine from '../../components/Vitrine';
+import Carrinho from '../../components/Carrinho';
+import CardPropaganda from '../../components/CardPropaganda';
+import GridProdutos from '../../components/GridProdutos';
 
 const AppContainer = styled.div`
   width: 100vw;
@@ -7,10 +10,13 @@ const AppContainer = styled.div`
   background-image: linear-gradient(90deg, #d8b567 35%, #d3bc89);
 `
 
-function Home() {
+function Home({ aberto }) {
   return (
     <AppContainer> 
       <Vitrine/>
+      <CardPropaganda/>
+      <GridProdutos />
+      <Carrinho aberto={aberto} />
     </AppContainer>
   )
 }

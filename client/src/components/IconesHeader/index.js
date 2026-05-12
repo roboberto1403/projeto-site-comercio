@@ -21,15 +21,15 @@ const Icone = styled.li`
   }
 `
 
-function IconesHeader() {
+function IconesHeader({ aberto, setAberto }) {
   return (
     <IconesContainer>
-    {icones.map(icone => (
-      <Icone>
-        <img src={icone} alt="Icone"/>
+      <Icone onClick={() => setAberto(!aberto)}>
+        <img src={icones[0]} alt="Icone"/>
       </Icone>
-    )
-    )}
+      <Icone>
+        <img src={icones[1]} alt="Icone"/>
+      </Icone>
     </IconesContainer>
   )
 }
