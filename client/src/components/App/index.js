@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../Header';
 import Home from '../../routes/Home';
+import TodosProdutos from '../../routes/TodosProdutos';
 import { createGlobalStyle } from 'styled-components';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
@@ -35,7 +36,7 @@ function App() {
         <Header aberto={aberto} setAberto={setAberto} />
         <Routes>
           <Route path='/' element={<Home aberto={aberto} />} />
-          {console.log(aberto)}
+          <Route path='/todosprodutos' element={<TodosProdutos />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Titulo from '../Titulo'
+import { Link } from 'react-router-dom'
 
 const CardPropagandaContainer = styled.section`
   background-color: #061c46;
@@ -25,7 +26,7 @@ const BotaoComprar = styled.button`
   }
 `
 
-function CardPropaganda() {
+function CardPropaganda({ rota }) {
   return (
     <CardPropagandaContainer>
       <Titulo
@@ -35,9 +36,11 @@ function CardPropaganda() {
       >
         ÚLTIMAS UNIDADES
       </Titulo>
-      <BotaoComprar>
-        COMPRAR
-      </BotaoComprar>
+      <Link to={"/" + rota}>
+        <BotaoComprar>
+          COMPRAR
+        </BotaoComprar>
+      </Link>
     </CardPropagandaContainer>
   )
 }

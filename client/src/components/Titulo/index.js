@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 const Titulo = styled.h2`
   width: 100%;
-  padding: 10px 0 30px 20px;
+  padding-bottom: 30px;
   margin: 0;
   font-size: ${props => props.tamanhoFonte || "18px"};
   color: ${props => props.cor || "#000"};

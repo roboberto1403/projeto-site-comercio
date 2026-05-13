@@ -3,6 +3,7 @@ import Vitrine from '../../components/Vitrine';
 import Carrinho from '../../components/Carrinho';
 import CardPropaganda from '../../components/CardPropaganda';
 import GridProdutos from '../../components/GridProdutos';
+import Filtro from '../../components/Filtro';
 
 const AppContainer = styled.div`
   width: 100vw;
@@ -14,8 +15,7 @@ function Home({ aberto }) {
   return (
     <AppContainer> 
       <Vitrine/>
-      <CardPropaganda/>
-      <GridProdutos />
+      <CardPropaganda rota={'todosprodutos'}/>
       <Carrinho aberto={aberto} />
     </AppContainer>
   )
