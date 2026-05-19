@@ -1,4 +1,4 @@
-import { produto } from "../models/index.js";
+import { produto, filtro } from "../models/index.js";
 import NaoEncontrado from "../erros/NaoEncontrado.js";
 
 class ProdutosController { 
@@ -8,6 +8,9 @@ class ProdutosController {
         const novoProduto = await produto.create(req.body);
         
         res.status(201).json({ message: "Produto cadastrado com sucesso", produto: novoProduto});
+        
+        await filtro.updateOne({}, { $addToSet: { cor: novoProduto.cor } } )
+
       } catch (erro) {
         next(erro);
       }
@@ -95,7 +98,7 @@ class ProdutosController {
 }
 
 async function processaBusca(parametros) {
-        const { categoria, nome, minPreco, maxPreco } = parametros;
+        const { categoria, nome, tipo, genero, cor, minPreco, maxPreco } = parametros;
 
         let busca = {};
         const preco = {};
@@ -103,6 +106,9 @@ async function processaBusca(parametros) {
         if (minPreco) preco.$gte = minPreco, busca.preco = preco;
         if (maxPreco) preco.$lte = maxPreco, busca.preco = preco;
         if (categoria) busca.categoria = categoria;
+        if (tipo) busca.tipo = tipo;
+        if (genero) busca.genero = genero;
+        if (cor) busca.cor = cor;
         if (nome) busca.nome = { $regex: nome, $options: "i" };
 
         return busca;

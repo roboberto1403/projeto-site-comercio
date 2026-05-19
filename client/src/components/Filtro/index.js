@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { useState } from 'react';
 import Titulo from '../Titulo'
 
 const FiltrosContainer = styled.ul`
@@ -31,21 +30,7 @@ const Checkbox = styled.button`
   transition: 0.2s;
 `
 
-function Filtro({ titulo, filtrosOpcoes }) {
-  const [filtrosSelecionados, setFiltrosSelecionados] = useState([]);
-
-  function toggleFiltro(nome) {
-    if (filtrosSelecionados.includes(nome)) {
-      setFiltrosSelecionados(
-        filtrosSelecionados.filter(filtro => filtro !== nome)
-      )
-    } else {
-      setFiltrosSelecionados([
-        ...filtrosSelecionados,
-        nome
-      ])
-    }
-  }
+function Filtro({ titulo, filtrosOpcoes, filtrosSelecionados, toggleFiltro }) {
 
   return (
     <div>
@@ -61,10 +46,10 @@ function Filtro({ titulo, filtrosOpcoes }) {
         {filtrosOpcoes.map((filtro) => (
           <FiltroOpcao key={filtro}>
             <Checkbox
-              $ativo={filtrosSelecionados.includes(filtro)}
-              onClick={() => toggleFiltro(filtro)}
+              $ativo={filtrosSelecionados[titulo.toLowerCase()].includes(filtro)}
+              onClick={() => toggleFiltro(titulo.toLowerCase(), filtro)}
             >
-              {filtrosSelecionados.includes(filtro) && '✓'}
+              {filtrosSelecionados[titulo.toLowerCase()].includes(filtro) && '✓'}
             </Checkbox>
 
             {filtro}

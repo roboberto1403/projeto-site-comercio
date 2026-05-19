@@ -2,8 +2,6 @@ import styled from 'styled-components'
 import Vitrine from '../../components/Vitrine';
 import Carrinho from '../../components/Carrinho';
 import CardPropaganda from '../../components/CardPropaganda';
-import GridProdutos from '../../components/GridProdutos';
-import Filtro from '../../components/Filtro';
 
 const AppContainer = styled.div`
   width: 100vw;

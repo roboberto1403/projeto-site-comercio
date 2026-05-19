@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/produtos", ProdutosController.listarProdutos, paginar);
 router.get("/produtos/busca", ProdutosController.listarProdutosPorFiltro, paginar);
 router.post("/produtos", ProdutosController.cadastrarProduto);
-router.delete("/produtos", ProdutosController.deletarProduto);
+router.delete("/produtos/:id", ProdutosController.deletarProduto);
 router.put("/produtos/:id", ProdutosController.atualizarProduto);
 
 export default router;

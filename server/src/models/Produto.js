@@ -19,12 +19,12 @@ const produtoSchema = new mongoose.Schema({
   estoque: { 
     type: Number, 
     required: [true, "O estoque do produto é obrigatório."] },
-  produto: { 
+  tipo: { 
     type: String, 
     required: [true, "O tipo do produto é obrigatório."],
     enum:{
       values: ["Colar", "Pulseira", "Anél", "Brinco", "Piercing"],
-      message: "O produto {VALUE} não é válido."
+      message: "O tipo de produto {VALUE} não é válido."
     } },
   cor: { 
     type: String, 

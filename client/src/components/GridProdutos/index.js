@@ -3,6 +3,7 @@ import ProdutoCard from '../ProdutoCard';
 import Filtro from '../Filtro';
 import colar from '../../images/colar.jpg'
 import { getProdutos } from '../../services/produtos';
+import { getFiltros } from '../../services/filtros';
 import { useEffect, useState } from 'react';
 
 const Container = styled.div`
@@ -30,25 +31,83 @@ const FiltroContainer = styled.div`
 
 function GridProdutos() {
   const [produtos, setProdutos] = useState([]);
+  const [filtros, setFiltros] = useState([]);
+  const [filtrosSelecionados, setFiltrosSelecionados] = useState({
+  cor: [],
+  categoria: [],
+  tipo: [],
+  genero: []
+  })
+
+  function toggleFiltro(filtro, nome) {
+    if (filtrosSelecionados[filtro].includes(nome)) {
+      setFiltrosSelecionados({
+        ...filtrosSelecionados,
+        [filtro]: filtrosSelecionados[filtro].filter(opcao => opcao !== nome)
+    })
+    } else {
+      setFiltrosSelecionados({
+        ...filtrosSelecionados,
+        [filtro]: [
+          ...filtrosSelecionados[filtro],
+          nome
+        ]
+      })
+    }
+  }
 
   useEffect(() => {
-    fetchProdutos()
+    const params = new URLSearchParams();
+
+    Object.keys(filtrosSelecionados).forEach(chave => {
+    if (filtrosSelecionados[chave].length > 0) {
+      for (let i = 0; i < filtrosSelecionados[chave].length; i++) {
+        params.append(`${chave}`, filtrosSelecionados[chave][i]);
+      }}})
+
+    console.log(filtrosSelecionados)
+    console.log(params.toString())
+    fetchProdutos(params)
+  }, [filtrosSelecionados])
+
+  useEffect(() => {
+    fetchFiltros()
   }, [])
 
-  async function fetchProdutos() {
-    const produtosDaAPI = await getProdutos();
+  async function fetchProdutos(params) {
+    const produtosDaAPI = await getProdutos(params);
     setProdutos(produtosDaAPI)
   }
 
-  const cores = ["Azul", "Laranja", "Amarelo"]
+  async function fetchFiltros() {
+    const filtrosDaAPI = await getFiltros();
+    setFiltros(filtrosDaAPI)
+  }
+
+  const {
+    cor = [],
+    categoria = [],
+    tipo = [],
+    genero = []
+  } = filtros[0] || {};
 
   return (
     <Container>
       <FiltroContainer>
+      {[      
+        ['Cor', cor],
+        ['Categoria', categoria],
+        ['Tipo', tipo],
+        ['Genero', genero]
+      ].map(([titulo, opcoes]) => (
         <Filtro
-          titulo="Cores"
-          filtrosOpcoes={cores}
+          key={titulo}
+          titulo={titulo}
+          filtrosOpcoes={opcoes}
+          filtrosSelecionados={filtrosSelecionados}
+          toggleFiltro={toggleFiltro}
         />
+      ))}
       </FiltroContainer>
       <GridContainer>
         <Grid>
